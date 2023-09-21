@@ -1,0 +1,44 @@
+---
+title: "Tarea2"
+output: 
+---
+# Tarea 2
+
+Building the decision matrix
+```{r}
+table_dec <- matrix(nrow = 4, ncol = 31)
+
+for (i in 10:40){
+    i
+    table_dec[1, i-10+1] <- 100 + 5*i
+    table_dec[2, i-10+1] <- 40 + 12*i
+    table_dec[3, i-10+1] <- 150 + 3*i
+    table_dec[4, i-10+1] <- 90 + 8*i
+}
+
+table_byrow <- c(t(table_dec))
+```
+Applying the criteria
+```{r}
+source("../teoriadecision_funciones_incertidumbre.R")
+
+table_dec <- crea.tablaX(table_byrow,
+                         numalternativas = 4,
+                         numestados = 31)
+
+#criterio de Savage
+cat("Savage\n")
+savage <- criterio.Savage(table_dec, favorable = FALSE)
+savage$ValorAlternativas
+
+#criterio de Laplace
+cat("Laplace\n")
+laplace <- criterio.Laplace(table_dec, favorable = FALSE)
+laplace$ValorAlternativas
+
+#criterio del punto ideal
+cat("Punto ideal\n")
+punto_ideal <- criterio.PuntoIdeal(table_dec, favorable = FALSE)
+punto_ideal$ValorAlternativas
+```
+
