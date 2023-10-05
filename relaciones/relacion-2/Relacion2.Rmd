@@ -1,0 +1,23 @@
+---
+title: "Relacion 2: Decisiones Multicriterio"
+output: html_document
+---
+## Settings
+```{r}
+source("../../teoriadecision_funciones_multicriterio.R")
+```
+
+## Ejercicio1
+### a)
+```{r}
+tb0201a <- multicriterio.crea.matrizvaloraciones(c(1,0,1,
+                                                   1,1,1,
+                                                   0,0,1),
+                                                 numalternativas = 3)
+tb0201a
+```
+Funcion de utilidad
+```{r}
+multicriterio.constfuncutilidad.maximales(tb0201a)
+```
+

@@ -2,9 +2,11 @@
 title: "Tarea2"
 output: 
 ---
+
 # Tarea 2
 
 Building the decision matrix
+
 ```{r}
 table_dec <- matrix(nrow = 4, ncol = 31)
 
@@ -18,10 +20,10 @@ for (i in 10:40){
 
 table_byrow <- c(t(table_dec))
 ```
-Applying the criteria
-```{r}
-source("../teoriadecision_funciones_incertidumbre.R")
 
+Applying the criteria
+
+```{r}
 table_dec <- crea.tablaX(table_byrow,
                          numalternativas = 4,
                          numestados = 31)
@@ -41,4 +43,3 @@ cat("Punto ideal\n")
 punto_ideal <- criterio.PuntoIdeal(table_dec, favorable = FALSE)
 punto_ideal$ValorAlternativas
 ```
-

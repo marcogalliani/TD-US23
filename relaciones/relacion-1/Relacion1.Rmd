@@ -1,0 +1,140 @@
+# Relacìon 1
+
+## Ejercicio 1
+
+```{r}
+source("../teoriadecision_funciones_incertidumbre.R")
+
+# creacion de la tabla de decision
+tabla_de_decision1 <- crea.tablaX(c(5, 4, 6, 2, 3, 1, -1, 8, 7, 5, 2, 0), numalternativas = 4, numestados = 3)
+
+
+# criterio de Wald (criterio pesimista)
+Wald_crit_prob1 <- criterio.Wald(tabla_de_decision1, favorable = TRUE)
+Wald_crit_prob1$AlternativaOptima
+
+# criterio optimista (Maximax)
+opt_crit_prob1 <- criterio.Optimista(tabla_de_decision1, favorable = TRUE)
+opt_crit_prob1$AlternativaOptima
+
+decision <- rep(0, 100)
+# criterio de Hurwicz
+for (alfa in seq(0, 1, 0.01)) {
+  Hurwicz_crit_prob1 <- criterio.Hurwicz(tabla_de_decision1, alfa = alfa, favorable = TRUE)
+  print(alfa)
+  print(Hurwicz_crit_prob1$AlternativaOptima)
+  rep[]
+}
+```
+
+
+```{r}
+criterio.Todos(tabla_de_decision1,
+  alfa = 0.5
+)
+```
+
+## Ejercicio 4
+Alternartivas
+- Security
+- Curadita
+- Preventiva
+
+Estados de naturaleza
+- Embarazada
+- No Embarazada
+
+```{r}
+matrix()
+```
+
+## Ejercicio 5
+
+
+## Ejercicio 7
+
+Matriz de decision
+```{r}
+# estado 1
+m11 <- 900 * 0.05
+m21 <- 900 * 0.60
+m31 <- 900
+
+# estado 2
+m12 <- 900 * 0.05
+m22 <- -900 * 0.20
+m32 <- -900
+
+tb07 <- crea.tablaX(
+  c(
+    m11, m12,
+    m21, m22,
+    m31, m32
+  ),
+  numalternativas = 3,
+  numestados = 2
+)
+```
+
+Resolucion
+```{r}
+criterio.Todos(tb07,
+  alfa = 0.5,
+  favorable = T
+)
+```
+
+
+## Ejercicio 8
+- dos decisiones
+    - publicar solo
+    - publicar con un editorial
+- dos estados de naturaleza
+    - exito
+    - no exito
+```{r}
+u <- 1000
+
+# estado exito
+m11 <- (2 * 200000 - 90000) / u
+m21 <- (20000 + 1 * 200000) / u
+
+# estado no exito
+m12 <- (2 * 10000 - 90000) / u
+m22 <- (20000 + 1 * 10000) / u
+
+# tabla
+tb08 <- crea.tablaX(
+  c(
+    m11, m12,
+    m21, m22
+  ),
+  numalternativas = 2,
+  numestados = 2
+)
+
+tb08
+```
+
+Resoulucion
+```{r}
+criterio.Todos(tb08,
+  alfa = 0.5,
+  favorable = T
+)
+#comportamiento de el criterio al variar de alfa
+dibuja.criterio.Hurwicz(tb08)
+```
+
+## Ejercicio 9
+
+```{r}
+
+```
+
+
+## Styling the document
+
+```{r}
+styler:::style_active_file()
+```
