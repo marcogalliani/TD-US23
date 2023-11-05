@@ -1,14 +1,21 @@
 ---
 title: "Relacion 2: Decisiones Multicriterio"
 output: html_document
+bibliography: references.bib
 ---
+
 ## Settings
 ```{r}
+rm(list = ls())
+
 source("../../teoriadecision_funciones_multicriterio.R")
+source("../../teoriadecision_funciones_multicriterio_diagram.R")
 ```
 
-## Ejercicio1
-### a)
+## Ejercicio1: funciones de preferencia
+Dadas las siguientes matrices correspondientes a la relaci ́on binaria no borrosa de preferencia- indiferencia:
+
+a) 
 ```{r}
 tb0201a <- multicriterio.crea.matrizvaloraciones(c(1,0,1,
                                                    1,1,1,
@@ -16,8 +23,457 @@ tb0201a <- multicriterio.crea.matrizvaloraciones(c(1,0,1,
                                                  numalternativas = 3)
 tb0201a
 ```
-Funcion de utilidad
+
+Funcion de utilidad construida con el metodo de los maximales
 ```{r}
+#debug(multicriterio.constfuncutilidad.maximales)
 multicriterio.constfuncutilidad.maximales(tb0201a)
+#undebug(multicriterio.constfuncutilidad.maximales)
 ```
+
+Usando el metodo para estructuras borrosas
+```{r}
+res0201a <- multicriterio.constfuncutilidad.estructuraborrosa(tb0201a)
+res0201a
+```
+
+(Mismo para los otros puntos)
+
+b)
+```{r}
+tb0201b <- multicriterio.crea.matrizvaloraciones(c(1,0,1,
+                                                   1,1,1,
+                                                   1,0,1),
+                                                 numalternativas = 3)
+tb0201b
+
+#maximales
+multicriterio.constfuncutilidad.maximales(tb0201b)
+
+#para estructuras borrosas
+multicriterio.constfuncutilidad.estructuraborrosa(tb0201b)
+```
+
+c)
+```{r}
+tb0201c <- multicriterio.crea.matrizvaloraciones(c(1,1,1,
+                                                   1,1,1,
+                                                   1,1,1),
+                                                 numalternativas = 3)
+tb0201c
+
+#maximales
+multicriterio.constfuncutilidad.maximales(tb0201c)
+
+#para estructuras borrosas
+multicriterio.constfuncutilidad.estructuraborrosa(tb0201c)
+```
+
+d) 
+```{r}
+tb0201d <- multicriterio.crea.matrizvaloraciones(c(1,1,1,0,1,
+                                                   0,1,0,0,1,
+                                                   1,0,1,0,1,
+                                                   1,1,1,1,0,
+                                                   0,0,0,0,1),
+                                                 numalternativas = 5)
+tb0201d
+
+#maximales
+multicriterio.constfuncutilidad.maximales(tb0201d)
+
+#para estructuras borrosas
+multicriterio.constfuncutilidad.estructuraborrosa(tb0201d)
+```
+
+e)
+```{r}
+tb0201e <- multicriterio.crea.matrizvaloraciones(c(1,1,1,0,1,
+                                                   0,1,0,0,1,
+                                                   1,1,1,0,1,
+                                                   1,1,1,1,0,
+                                                   0,0,0,0,1),
+                                                 numalternativas = 5)
+tb0201e
+
+#maximales
+multicriterio.constfuncutilidad.maximales(tb0201e)
+
+#para estructuras borrosas
+multicriterio.constfuncutilidad.estructuraborrosa(tb0201e)
+```
+
+## Ejercicio 2: funciones de preferencia
+a)
+```{r}
+tb0202a <- multicriterio.crea.matrizvaloraciones(c(0,0.4,0.7,
+                                                   0.2,0,0.5,
+                                                   0.3,0.6,0),
+                                                 numalternativas = 3)
+tb0202a
+tb0202a
+
+#maximales
+multicriterio.constfuncutilidad.maximales(tb0202a)
+
+#para estructuras borrosas
+multicriterio.constfuncutilidad.estructuraborrosa(tb0202a)
+```
+b)
+```{r}
+tb0202b <- multicriterio.crea.matrizvaloraciones(c(0,0.2,0.4,
+                                                   0.9,0,0.8,
+                                                   0.1,0.3,0),
+                                                 numalternativas = 3)
+tb0202b
+
+#maximales
+multicriterio.constfuncutilidad.maximales(tb0202b)
+
+#para estructuras borrosas
+multicriterio.constfuncutilidad.estructuraborrosa(tb0202b)
+```
+
+## Ejercicio 3: homogenizacion
+```{r}
+tb03 <- multicriterio.crea.matrizdecision(
+    c(100, 15, 7, 40, 50,
+      200,25, 7, 60, 200,
+      100, 20, 4, 25, 25,
+      200, 30, 20, 70, 350,
+      250, 25, 15, 100, 500),
+    numalternativas = 5,
+    numcriterios = 5
+)
+```
+
+a) Homogeneice las columnas de la tabla de decisi ́on por el m ́etodo Nadir.
+```{r}
+multicriterio.homogeneizacion.nadir(tb03)
+```
+b) Homogeneice las columnas de la tabla de decisíon por el m ́etodo Promethee, considerando los siguientes valores δ y δ para cada uno de los criterios: C1 : (30, 120), C2 : (3, 12), C3 : (4, 10), C4 : (20, 60) y C5 : (100, 400), respectivamente.
+```{r}
+multicriterio.homogeneizacion.promethee(
+    tb03,
+    v.delta.min = c(30, 3, 4, 20, 100),
+    v.delta.max = c(120, 12, 10, 60, 400)
+)
+```
+
+## Ejercicio 4: AHP
+### Funciones R de clase
+```{r}
+tb0401 = multicriterio.crea.matrizvaloraciones_mej(c(2),numalternativas = 2,
+            v.nombres.alternativas = c("Rendimiento","Riesgo"))
+tb0401
+```
+
+```{r}
+(tb0402a = multicriterio.crea.matrizvaloraciones_mej(c(3),2,c("A","B")))
+```
+
+```{r}
+(tb0402b = multicriterio.crea.matrizvaloraciones_mej(c(1/2),2,c("A","B")))
+```
+
+Calculo de los pesos
+
+```{r}
+pl0401 = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0401)
+pl0401
+```
+
+```{r}
+pl0402a = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0402a)
+pl0402a$valoraciones.ahp
+
+pl0402b = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0402b)
+pl0402b$valoraciones.ahp
+```
+
+Pesos globales
+```{r}
+pg04 = multicriterio.metodoAHP.pesosglobales_entabla(pl0401$valoraciones.ahp,
+        rbind(pl0402a$valoraciones.ahp,
+              pl0402b$valoraciones.ahp))
+pg04
+```
+
+La mejor decision es la alternativa A con peso global $61.1\%$
+
+### Funciones R de clase (diagram)
+
+```{r}
+matriznivel2_04 = array(NA, dim = c(2,2,2))
+matriznivel2_04[,,1] = tb0402a
+matriznivel2_04[,,2] = tb0402b
+dimnames(matriznivel2_04)[[1]] = c("A","B")
+dimnames(matriznivel2_04)[[2]] = c("A","B")
+matriznivel2_04
+```
+
+```{r}
+# teoriadecision_funciones_multicriterio_diagram.R
+multicriterio.metodoahp.diagrama(tb0401,matriznivel2_04)
+```
+
+Misma solucion de antes
+
+### Con paquete AHP
+
+```{r}
+#devtools::install_github("gluc/ahp", build_vignettes = TRUE)
+devtools::install_github("calote/ahp", build_vignettes = TRUE)
+```
+
+```{r}
+library(ahp)
+ahp::RunGUI()
+```
+
+```{r}
+library(ahp)
+datos = Load("ahp24.ahp")
+Calculate(datos)
+
+Visualize(datos)
+```
+
+
+## Ejercicio 5: AHP
+### Paso 1: Introducion de datos
+
+```{r}
+n.criterios <- c("Liderazgo", "Habersonal", "HabGestion")
+
+tb0501 <- multicriterio.crea.matrizvaloraciones_mej(
+    c(1/3, 1/4, 2),
+    numalternativas = 3,
+    v.nombres.alternativas = n.criterios
+)
+
+tb0501
+```
+
+```{r}
+n.alternativas <- c("A", "B")
+tb0502a <- multicriterio.crea.matrizvaloraciones_mej(
+    c(4),
+    2,
+    n.alternativas
+)
+
+tb0502a
+```
+
+```{r}
+tb0502b <- multicriterio.crea.matrizvaloraciones_mej(c(3), 2, n.alternativas)
+tb0502b
+```
+
+```{r}
+tb0502c <- multicriterio.crea.matrizvaloraciones_mej(c(2), 2, n.alternativas)
+tb0502c
+```
+
+### Paso 2: Calculo pesos locales
+```{r}
+(pl0501 = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0501))
+```
+
+```{r}
+(pl0502a = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0502a))
+```
+
+```{r}
+(pl0502b = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0502b))
+```
+
+```{r}
+(pl0502c = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0502c))
+```
+
+### Paso 3: Calculo pesos globales
+
+Obtenemos los pesos globales
+
+```{r}
+pg05 <- multicriterio.metodoAHP.pesosglobales_entabla(
+    pl0501$valoraciones.ahp,
+    rbind(pl0502a$valoraciones.ahp,
+          pl0502b$valoraciones.ahp,
+          pl0502c$valoraciones.ahp)
+)
+
+pg05
+```
+
+### Paso 4:Ver jerarquia
+
+```{r}
+num.alt <- 2
+num.crit <- 3
+
+Xmatriznivel2 <- array(
+    NA, 
+    dim = c(num.alt, num.alt, num.crit)
+)
+
+Xmatriznivel2[,,1] <- tb0502a
+Xmatriznivel2[,,2] <- tb0502b
+Xmatriznivel2[,,3] <- tb0502c
+
+dimnames(Xmatriznivel2)[[1]] <- n.alternativas
+dimnames(Xmatriznivel2)[[2]] <- n.alternativas
+dimnames(Xmatriznivel2)[[3]] <- n.criterios
+
+#Xmatrinivel2
+
+multicriterio.metodoahp.diagrama(
+    tb0501,
+    Xmatriznivel2
+)
+```
+
+### AHP package
+
+```{r}
+library(ahp)
+dtmul <- Load("ejmultinivel.ahp")
+```
+
+## Ejercicio 6: AHP
+
+### Funciones
+#### Metodo 1
+```{r}
+# teoriadecision_funciones_multicriterio.R
+tb0601 = multicriterio.crea.matrizvaloraciones_mej(c(7,9,3),numalternativas = 3,
+            v.nombres.alternativas = c("Costo","Confiabilidad","Plazo Entrega"))
+tb0601
+
+(tb0602a = multicriterio.crea.matrizvaloraciones_mej(c(1/3,6,8),3,c("A","B","C")))
+(tb0602b = multicriterio.crea.matrizvaloraciones_mej(c(6,2,1/3),3,c("A","B","C")))
+(tb0602c = multicriterio.crea.matrizvaloraciones_mej(c(8,1,1/8),3,c("A","B","C")))
+
+```
+Calculamos los pesos locales
+```{r}
+pl0601 = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0601)
+pl0601$valoraciones.ahp
+
+pl0602a = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0602a)
+pl0602a$valoraciones.ahp
+
+pl0602b = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0602b)
+pl0602b$valoraciones.ahp
+
+pl0602c = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0602c)
+pl0602c$valoraciones.ahp
+```
+Ahora los pesos globales
+```{r}
+pg06 = multicriterio.metodoAHP.pesosglobales_entabla(pl0601$valoraciones.ahp,
+        rbind(pl0602a$valoraciones.ahp,
+              pl0602b$valoraciones.ahp,
+              pl0602c$valoraciones.ahp))
+pg06
+```
+Mejor decision es la alternativa B (peso global $53\%$)
+
+
+#### Metodo 2
+```{r}
+num.alt = 3
+num.cri = 3
+Xarray_nivel2 = array(NA,dim=c(num.alt,num.alt,num.cri))
+Xarray_nivel2[,,1] = tb0602a
+Xarray_nivel2[,,2] = tb0602b
+Xarray_nivel2[,,3] = tb0602c
+pg06com = multicriterio.metodoAHP.variante3.completo(tb0601, Xarray_nivel2)
+pg06com$pesos.globales_entabla
+```
+Mejor decision es la alternativa B (peso global $52\%$)
+
+### Estudio de la inconsistencia de la solucion
+```{r}
+(Inconsistencia0601 = multicriterio.metodoAHP.coef.inconsistencia(tb0601))
+```
+```{r}
+Inconsistencia0602a = multicriterio.metodoAHP.coef.inconsistencia(tb0602a)
+c(Inconsistencia0602a$mensaje, round(Inconsistencia0602a$RI.coef.inconsistencia,4) )
+
+Inconsistencia0602b = multicriterio.metodoAHP.coef.inconsistencia(tb0602b)
+c(Inconsistencia0602b$mensaje, round(Inconsistencia0602b$RI.coef.inconsistencia,4) )
+
+Inconsistencia0602c = multicriterio.metodoAHP.coef.inconsistencia(tb0602c)
+c(Inconsistencia0602c$mensaje, round(Inconsistencia0602c$RI.coef.inconsistencia,4) )
+```
+
+### Con ayudo de las funciones en la clase diagram
+```{r}
+matriznivel2_06 = array(NA, dim = c(3,3,3))
+matriznivel2_06[,,1] = tb0602a
+matriznivel2_06[,,2] = tb0602b
+matriznivel2_06[,,3] = tb0602c
+dimnames(matriznivel2_06)[[1]] = c("A","B","C")
+dimnames(matriznivel2_06)[[2]] = c("A","B","C")
+matriznivel2_06
+```
+
+```{r}
+# teoriadecision_funciones_multicriterio_diagram.R
+multicriterio.metodoahp.diagrama(tb0601,matriznivel2_06)
+```
+
+### Paquete ahp
+```{r}
+library(ahp)
+ahp::RunGUI()
+```
+```{r}
+library(ahp)
+datos = Load("ahp26.ahp")
+Calculate(datos)
+Visualize(datos)
+```
+
+
+## Ejercicio 7: agregacion de criterios
+
+```{r}
+rm(list = ls())
+
+source("../../teoriadecision_funciones_multicriterio.R")
+source("../../teoriadecision_funciones_multicriterio_diagram.R")
+```
+
+```{r}
+ej27 <- multicriterio.crea.matrizdecision(
+    c(100, 15, 7, 40, -50,
+      200,25, 7, 60, -200,
+      100, 20, 4, 25, -25,
+      200, 30, 20, 70, -350,
+      250, 25, 15, 100, -500),
+    numalternativas = 5,
+    numcriterios = 5
+)
+```
+
+
+
+
+### Metodo axiomatico Arrow-Raymond
+
+```{r}
+sol27 <- multicriterio.metodoaxiomatico.ArrowRaymond(ej27)
+
+sol27$pasos
+
+sol27$alternativasordenadas
+```
+
+La mejor alternativas es "D" (a4)
+
+## Ejercicio 8: PROMETHEE
 

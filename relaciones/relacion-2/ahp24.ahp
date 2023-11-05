@@ -1,0 +1,20 @@
+Version: 2.0
+Alternatives: &alternatives
+    A:
+    B:
+Goal:
+    name: Aplicar AHP
+    preferences:
+        pairwise:
+            - [Rendimiento, Riesgo, 2]
+    children:
+        Rendimiento:
+            preferences:
+                pairwise:
+                    - [A, B, 3]
+            children: *alternatives
+        Riesgo:
+            preferences:
+                pairwise:
+                    - [A, B, 1/2]
+            children: *alternatives
