@@ -1,0 +1,130 @@
+---
+title: "examen TD"
+---
+
+## Ejercicio 1
+```{r}
+library(readxl)
+
+Ejercicio1 <- read_excel("Ejercicio1.xlsx",
+                         sheet = "Import in R", col_names = FALSE)
+
+source("teoriadecision_funciones_incertidumbre.R")
+
+criterio.Todos(Ejercicio1, favorable = F)
+
+dibuja.criterio.Hurwicz_Intervalos(Ejercicio1)
+
+dibuja.criterio.Hurwicz_Intervalos(Ejercicio1, favorable = FALSE)
+```
+
+
+## Ejercicio 2
+```{r}
+rm(list = ls())
+source("teoriadecision_funciones_incertidumbre.R")
+delta_valores <- seq(5,40)
+decisiones <- numeric()
+
+for(delta in delta_valores){
+    tabla <- crea.tablaX(c(10, -3, delta, -3,
+                           -8, -4, 2*delta, -7,
+                           8, 1, 6, 2, -6, -2, 1.5*delta, 7), 
+                          numalternativas = 4, numestados = 4)
+    decisiones[[delta - 4]] <- criterio.PuntoIdeal(tabla, favorable = T)$AlternativaOptima
+}
+
+decisiones
+```
+
+## Ejercicio 3
+```{r}
+source("teoriadecision_funciones_multicriterio.R")
+
+tb3 <- multicriterio.crea.matrizvaloraciones_mej(
+    c(2, 3, 1/2, 1/4, 
+      2, 1/3, 1/2,
+      1/2, 1/4,
+      1/2),
+    numalternativas = 5
+)
+
+tb3
+
+val_criterios = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb3)
+val_criterios
+
+
+#a
+multicriterio.metodoAHP.coef.inconsistencia(tb3)
+
+#b
+multicriterio.metodoAHP.variante2.mediageometrica(tb3)$valoraciones.ahp
+
+#c y d
+multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb3)$valoraciones.ahp
+```
+
+## Ejercicio 5
+```{r}
+rm(list = ls())
+
+source("teoriadecision_funciones_multicriterio.R")
+
+tb5 <- multicriterio.crea.matrizvaloraciones_mej(
+    c(2, 3, 1/2, 1/4, 
+      2, 1/3, 1/2,
+      1/2, 1,
+      1/2),
+    numalternativas = 5
+)
+tb5
+
+pesos_criterios <- multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb5)$valoraciones.ahp
+pesos_criterios
+```
+```{r}
+tabla_decision <- multicriterio.crea.matrizdecision(
+    c(5, 9.2, 8, 3.63, 2,
+      4.17, 0, 7.5, 1.82, 4,
+      7.67, 8.84, 9.5, 5.47, 0,
+      0, 5.98, 2.5, 0.19, 4,
+      7.08, 9.55, 9, 2.41, 4,
+      3, 7.14, 4.6, 5.6, 4),
+    numalternativas = 6,
+    numcriterios = 5
+)
+```
+```{r}
+electre_08 <- multicriterio.metodoELECTRE_I(tabla_decision,
+                                      pesos.criterios = pesos_criterios,
+                                      nivel.concordancia.minimo.alpha = 0.8,
+                                      no.se.compensan = c(Inf, Inf, Inf, Inf, Inf),
+                                      que.alternativas = T)
+
+electre_08$nucleo_aprox
+qgraph::qgraph(electre_08$relacion.dominante)
+```
+
+
+```{r}
+electre_07 <- multicriterio.metodoELECTRE_I(tabla_decision,
+                                      pesos.criterios = pesos_criterios,
+                                      nivel.concordancia.minimo.alpha = 0.7,
+                                      no.se.compensan = c(Inf, Inf, Inf, Inf, Inf),
+                                      que.alternativas = c(1,3,5,6))
+
+electre_07$nucleo_aprox
+qgraph::qgraph(electre_07$relacion.dominante)
+```
+```{r}
+electre_05 <- multicriterio.metodoELECTRE_I(tabla_decision,
+                                      pesos.criterios = pesos_criterios,
+                                      nivel.concordancia.minimo.alpha = 0.5,
+                                      no.se.compensan = c(Inf, Inf, Inf, Inf, Inf),
+                                      que.alternativas = c(3,5))
+
+electre_05$nucleo_aprox
+qgraph::qgraph(electre_05$relacion.dominante)
+```
+

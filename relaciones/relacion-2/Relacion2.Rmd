@@ -4,15 +4,15 @@ output: html_document
 bibliography: references.bib
 ---
 
-## Settings
-```{r}
+## Ejercicio1: funciones de preferencia
+```{r settings-1}
 rm(list = ls())
 
 source("../../teoriadecision_funciones_multicriterio.R")
 source("../../teoriadecision_funciones_multicriterio_diagram.R")
 ```
 
-## Ejercicio1: funciones de preferencia
+
 Dadas las siguientes matrices correspondientes a la relaci ́on binaria no borrosa de preferencia- indiferencia:
 
 a) 
@@ -104,6 +104,13 @@ multicriterio.constfuncutilidad.estructuraborrosa(tb0201e)
 ```
 
 ## Ejercicio 2: funciones de preferencia
+```{r settings-2}
+rm(list = ls())
+
+source("../../teoriadecision_funciones_multicriterio.R")
+source("../../teoriadecision_funciones_multicriterio_diagram.R")
+```
+
 a)
 ```{r}
 tb0202a <- multicriterio.crea.matrizvaloraciones(c(0,0.4,0.7,
@@ -135,6 +142,14 @@ multicriterio.constfuncutilidad.estructuraborrosa(tb0202b)
 ```
 
 ## Ejercicio 3: homogenizacion
+```{r settings-3}
+rm(list = ls())
+
+source("../../teoriadecision_funciones_multicriterio.R")
+source("../../teoriadecision_funciones_multicriterio_diagram.R")
+```
+
+
 ```{r}
 tb03 <- multicriterio.crea.matrizdecision(
     c(100, 15, 7, 40, 50,
@@ -145,6 +160,8 @@ tb03 <- multicriterio.crea.matrizdecision(
     numalternativas = 5,
     numcriterios = 5
 )
+
+tb03
 ```
 
 a) Homogeneice las columnas de la tabla de decisi ́on por el m ́etodo Nadir.
@@ -161,7 +178,29 @@ multicriterio.homogeneizacion.promethee(
 ```
 
 ## Ejercicio 4: AHP
-### Funciones R de clase
+```{r settings-4}
+rm(list = ls())
+
+source("../../teoriadecision_funciones_multicriterio.R")
+source("../../teoriadecision_funciones_multicriterio_diagram.R")
+```
+
+```{r}
+library(formattable)
+library(htmltools)
+library(webshot)
+export_formattable <- function(f, file, width = "100%", height = NULL,
+                               background = "white", delay = 0.2){
+  w <- formattable::as.htmlwidget(f, width = width, height = height)
+  path <- htmltools::html_print(w, background = background, viewer = NULL)
+  url <- paste0("file:///", gsub("\\\\", "/", normalizePath(path)))
+  webshot::webshot(url, file = file, 
+                   selector = ".formattable_widget",
+                   delay = delay)
+}
+```
+
+
 ```{r}
 tb0401 = multicriterio.crea.matrizvaloraciones_mej(c(2),numalternativas = 2,
             v.nombres.alternativas = c("Rendimiento","Riesgo"))
@@ -176,8 +215,9 @@ tb0401
 (tb0402b = multicriterio.crea.matrizvaloraciones_mej(c(1/2),2,c("A","B")))
 ```
 
-Calculo de los pesos
+### Funciones R de clase
 
+Calculo de los pesos
 ```{r}
 pl0401 = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0401)
 pl0401
@@ -220,7 +260,6 @@ multicriterio.metodoahp.diagrama(tb0401,matriznivel2_04)
 Misma solucion de antes
 
 ### Con paquete AHP
-
 ```{r}
 #devtools::install_github("gluc/ahp", build_vignettes = TRUE)
 devtools::install_github("calote/ahp", build_vignettes = TRUE)
@@ -239,8 +278,25 @@ Calculate(datos)
 Visualize(datos)
 ```
 
+Contribucion total
+```{r}
+export_formattable(AnalyzeTable(datos), file = "tablaahp204.png")
+```
+Pesos locales
+```{r}
+t2 = AnalyzeTable(datos, variable = "priority")
+export_formattable(t2, file = "tablaahp204b.png")
+```
+
 
 ## Ejercicio 5: AHP
+```{r settings-5}
+rm(list = ls())
+
+source("../../teoriadecision_funciones_multicriterio.R")
+source("../../teoriadecision_funciones_multicriterio_diagram.R")
+```
+
 ### Paso 1: Introducion de datos
 
 ```{r}
@@ -343,6 +399,12 @@ dtmul <- Load("ejmultinivel.ahp")
 ```
 
 ## Ejercicio 6: AHP
+```{r settings-6}
+rm(list = ls())
+
+source("../../teoriadecision_funciones_multicriterio.R")
+source("../../teoriadecision_funciones_multicriterio_diagram.R")
+```
 
 ### Funciones
 #### Metodo 1
@@ -439,9 +501,9 @@ Visualize(datos)
 ```
 
 
-## Ejercicio 7: agregacion de criterios
+## Ejercicio 7: ELECTRE y Arrow-Raymond
 
-```{r}
+```{r settings-7}
 rm(list = ls())
 
 source("../../teoriadecision_funciones_multicriterio.R")
@@ -460,20 +522,133 @@ ej27 <- multicriterio.crea.matrizdecision(
 )
 ```
 
+### ELECTRE
+```{r}
+sal7 <- multicriterio.metodoELECTRE_I(ej27,
+                                      pesos.criterios = c(0.25, 0.25, 0.2, 0.2, 0.2),
+                                      nivel.concordancia.minimo.alpha = 0.7,
+                                      no.se.compensan = c(60, Inf, 4, Inf, Inf),
+                                      que.alternativas = T)
 
+qgraph::qgraph(sal7$relacion.dominante)
+```
+El nucleo de la relacion de dominancia es 
+```{r}
+sal7$nucleo_aprox
+```
 
+Para lograr una sola solucion
+a) Tratamos de reducir las alternativas
+```{r}
+sal7a <- multicriterio.metodoELECTRE_I(ej27,
+                                      pesos.criterios = c(0.25, 0.25, 0.2, 0.2, 0.2),
+                                      nivel.concordancia.minimo.alpha = 0.7,
+                                      no.se.compensan = c(60, Inf, 4, Inf, Inf),
+                                      que.alternativas = c(4,5))
+
+qgraph::qgraph(sal7a$relacion.dominante)
+```
+
+b) Tratamos de reducir el nivel de concordancia minimo
+```{r}
+sal7b <- multicriterio.metodoELECTRE_I(ej27,
+                                      pesos.criterios = c(0.25, 0.25, 0.2, 0.2, 0.2),
+                                      nivel.concordancia.minimo.alpha = 0.5,
+                                      no.se.compensan = c(60, Inf, 4, Inf, Inf),
+                                      que.alternativas = c(4,5))
+
+qgraph::qgraph(sal7b$relacion.dominante)
+```
+
+La alternativa 4 es la mejor
 
 ### Metodo axiomatico Arrow-Raymond
-
 ```{r}
 sol27 <- multicriterio.metodoaxiomatico.ArrowRaymond(ej27)
 
 sol27$pasos
-
 sol27$alternativasordenadas
-```
 
-La mejor alternativas es "D" (a4)
+
+```
+La mejor alternativas es "D" (a4) (misma que el metodo ELECTRE)
 
 ## Ejercicio 8: PROMETHEE
+```{r settings-8}
+rm(list = ls())
+
+source("../../teoriadecision_funciones_multicriterio.R")
+source("../../teoriadecision_funciones_multicriterio_diagram.R")
+source("../../teoriadecision_funciones_multicriterio_utiles.R")
+```
+
+Datos
+```{r}
+matdecision = multicriterio.crea.matrizdecision(
+    vector_matporfilas = c(-90, 80, -6, 5.4,
+                           -58, 65, -2, 9.7,
+                           -60, 83, -4, 7.2,
+                           -80, 40, -10, 7.5,
+                           -72, 52, -6, 2),
+    numalternativas = 5, 
+    numcriterios = 4,
+    v.nombresalt = paste0("e",1:5),
+    v.nombrescri = paste0("criterion",1:4) 
+)
+
+tab.fpref01 = matrix(c( 
+    # func, qi, pi, si 
+    2, 10,0,0,
+    3, 0,25,0,
+    5, 1.5,5,0,
+    4,3,6,0
+    ), 
+    nrow = 4,ncol = 4,
+    byrow = T
+)
+
+pesos.criterios01 = c(0.20,0.20,0.30,0.30)
+```
+
+### Resolucion con Promethee I y II
+```{r}
+tab.P1 <- multicriterio.metodo.promethee_i(
+    tabdecs.X = matdecision,
+    pesos.criterios = pesos.criterios01,
+    tab.fpref = tab.fpref01
+)
+
+tab.P2 <- multicriterio.metodo.promethee_ii(
+    tabdecs.X = matdecision,
+    pesos.criterios = pesos.criterios01,
+    tab.fpref = tab.fpref01
+)
+
+qgraph::qgraph(tab.P1$tablarelacionsupera)
+qgraph::qgraph(tab.P2$tablarelacionsupera)
+```
+
+
+
+### Resolucion con Promethee Windows
+```{r}
+(res = multicriterio.metodo.promethee_windows(matdecision, tab.fpref01, pesos.criterios01))
+
+qgraph::qgraph(res$)
+```
+
+Muestra los costos con signo positivo e identifica qué criterios son de maximizar y de minimizar
+```{r}
+(res = multicriterio.metodo.promethee_windows(matdecision, tab.fpref01, pesos.criterios01,
+                                              fminmax = c("min","max","min","max") ))
+
+qgraph::qgraph(res$)
+```
+
+Salidas mas elegante
+```{r}
+res02 = multicriterio.metodo.promethee_windows_kableExtra(res)
+res02$tabEscenario
+```
+
 
