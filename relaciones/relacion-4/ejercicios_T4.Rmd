@@ -1,0 +1,11 @@
+---
+title: "Ejercicios Tema 4: decision bayesiana"
+output: html_document
+---
+
+## Ejercicio 1
+```{r}
+rm(list = ls())
+source("../../teoriadecision_funciones_bayesiana.R")
+```
+

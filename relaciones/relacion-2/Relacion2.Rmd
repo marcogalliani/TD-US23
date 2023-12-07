@@ -349,7 +349,7 @@ tb0502c
 (pl0502c = multicriterio.metodoAHP.variante1.autovectormayorautovalor(tb0502c))
 ```
 
-### Paso 3: Calculo pesos globales
+### Paso 3: Calculo pesos globales 
 
 Obtenemos los pesos globales
 

@@ -1,0 +1,129 @@
+---
+title: "Relacion 3"
+output: html_document
+---
+
+## Ejercicio 5
+```{r}
+rm(list = ls())
+
+```
+
+Datos
+```{r}
+tb_35 <- data.frame(
+    almacen1 = c(10, 10, 15, 30),
+    almacen2 = c(15, 17.5, 16, 35),
+    almecen3 = c(20, 15, 19, 18),
+    row.names = c("I", "II", "III", "IV")
+)
+tb_35
+
+probabilidades <- c(0.3, 0.4, 0.3)
+```
+Computacion del REMA
+```{r}
+medias_por_alt <- as.matrix(tb_35) %*% probabilidades
+medias_por_alt
+
+REMA <- min(medias_por_alt)
+
+cat("REMA: ", REMA, "\n")
+cat("alternativa: ", which.min(medias_por_alt), "\n")
+```
+
+Computacion del REIP
+```{r}
+REIP <- apply(as.matrix(tb_35), MARGIN = 2, min) %*% probabilidades
+cat("REMA: ", REIP, "\n")
+
+VEIP <- REIP - REMA
+cat("VEIP: ", VEIP, "\n")
+```
+
+## Ejercicio 6
+```{r}
+rm(list = ls())
+```
+
+Datos:
+
+alternativas
+
+- a1 = A
+- a2 = B
+
+estados de la naturaleza
+
+- e1 = "el banco"
+- e2 = "la renta"
+
+```{r}
+
+tb_36 <- data.frame(
+    e1 = c(13.5, 12.0),
+    e2 = c(58, 76),
+    row.names = c("a1", "a2")
+)
+
+tb_36
+
+probabilidades <- c(0.5, 0.5)
+```
+
+
+```{r}
+medias_por_alt <- as.matrix(tb_36) %*% probabilidades
+medias_por_alt
+
+REMA <- max(medias_por_alt)
+
+cat("REMA: ", REMA, "\n")
+cat("alternativa: ", which.max(medias_por_alt), "\n")
+```
+
+## Ejercicio 9
+```{r}
+rm(list = ls())
+
+```
+
+Datos 
+
+alternativas
+
+- a_i = "jugar i-esimo jugador"
+- b_i = "no jugar i-esimo jugador"
+con i = 1,2,3
+
+estados de la naturaleza 
+
+- A_i = "Acierta en jugada i-esima"
+- F_i = "Falla ..."
+
+
+Arbol de decision
+
+D1
+    -> a1
+        R1: juga la primera vez
+            -> A1
+                D2
+                    -> a2
+                        R2
+                            -> A2
+                                D3
+                                    -> a3
+                                        R3
+                                            -> A3: delta = 9 - 3
+                                            -> F3: delta = -3
+                                    -> b3: delta = 6 - 2 = 4
+                            -> F2: delta = 0 - 2 = 1 (si fallo lo devuelvo todo)
+                    -> b2: Delta = 3 - 1 = 2
+            -> F1 : Delta = 0 - 1 = -1
+    -> b1: Delta = 0
+```{r}
+
+```
+
+
